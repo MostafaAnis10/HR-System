@@ -1,0 +1,48 @@
+﻿@model CreateEmployeeVM
+@inject IDepartmentService dept
+
+@{
+    var Department = dept.GetDepartment();
+}
+
+<form asp-action="Create"
+      method="post"
+      enctype="multipart/form-data"
+      class="glass-card form-wrapper">
+
+    <h4 class="form-title">Create New Employee</h4>
+
+    <!-- Name -->
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control glass-input" />
+    </div>
+
+    <!-- Salary -->
+    <div class="mb-3">
+        <label asp-for="Salary" class="form-label"></label>
+        <input asp-for="Salary" class="form-control glass-input" />
+    </div>
+
+    <!-- Department -->
+    <div class="mb-3">
+        <label asp-for="DepartmentId" class="form-label"></label>
+        <select asp-for="DepartmentId" class="form-select glass-input">
+            <option value="">-- Select Department --</option>
+            @foreach (var dep in Department.result)
+            {
+                <option value="@dep.Id">@dep.Name</option>
+            }
+        </select>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="mb-3">
+        <label asp-for="File" class="form-label">Employee Image</label>
+        <input asp-for="File" type="file" class="form-control glass-input" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">
+        Create Employee
+    </button>
+</form>

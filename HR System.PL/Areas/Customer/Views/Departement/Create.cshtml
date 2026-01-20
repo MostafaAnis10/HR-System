@@ -1,0 +1,75 @@
+﻿@model CreateDepartementVM
+
+@{
+    ViewData["Title"] = "Create Department";
+}
+
+<div class="container pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0" style="background-color: #1a1d21; border-radius: 20px; color: white;">
+                <div class="card-header border-0 bg-transparent pt-4 ps-4">
+                    <h3 class="fw-bold" style="color: #6f42c1;">Create New Department</h3>
+                    <p class="text-secondary small">Enter the details below to add a new department to the system.</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label text-secondary small ps-1">Department Name</label>
+                            <input asp-for="Name" class="form-control custom-input" placeholder="e.g. Software Development" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 me-md-2" style="border-radius: 10px;">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn px-5" style="background-color: #6f42c1; color: white; border-radius: 10px; font-weight: 600;">
+                                Save Department
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <style>
+        /* ستايل خاص بالـ Inputs عشان تليق مع الـ Dark Theme */
+        .custom-input {
+            background-color: #252930 !important;
+            border: 1px solid #343a40 !important;
+            color: white !important;
+            border-radius: 10px !important;
+            padding: 12px 15px !important;
+            transition: all 0.3s ease;
+        }
+
+            .custom-input:focus {
+                background-color: #2b3038 !important;
+                border-color: #6f42c1 !important;
+                box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25) !important;
+                outline: none;
+            }
+
+            .custom-input::placeholder {
+                color: #6c757d;
+                font-size: 0.9rem;
+            }
+
+        body {
+            background-color: #0f1114; /* لون خلفية الصفحة الأساسي */
+        }
+    </style>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

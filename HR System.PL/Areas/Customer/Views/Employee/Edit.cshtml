@@ -1,0 +1,103 @@
+﻿@model EditEmployeeVM
+@inject IDepartmentService dept
+@{
+    var Department = dept.GetDepartment();
+}
+
+<style>
+    /* ... التنسيقات السابقة التي أرفقتها ... */
+
+    /* إضافات لتنسيق قسم الصورة */
+    .image-preview-wrapper {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid rgba(124, 58, 237, 0.5);
+    }
+
+    .image-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image-placeholder {
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        font-size: 0.8rem;
+        color: #9CA3AF;
+        text-align: center;
+    }
+</style>
+
+<div class="glass-card form-wrapper">
+    <h4 class="form-title">Edit Employee</h4>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="File" /> @if (ViewBag.Error != null)
+        {
+            <p class="text-danger">@ViewBag.Error</p>
+        }
+
+        <div class="mb-3">
+            <label class="form-label d-block">Current Profile Picture</label>
+            <div class="image-preview-wrapper">
+                @if (!string.IsNullOrEmpty(Model.File))
+                {
+                    <img src="~/Files/@Model.File" class="image-preview" alt="Employee Image" />
+                }
+                else
+                {
+                    <div class="no-image-placeholder">No Image</div>
+                }
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="NewFile" class="form-label">Upload New Photo</label>
+            <input asp-for="NewFile" type="file" class="form-control glass-input" accept="image/*" />
+            <span asp-validation-for="NewFile" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control glass-input" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Salary" class="form-label">Salary</label>
+            <input asp-for="Salary" class="form-control glass-input" />
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DepartmentId" class="form-label">Department</label>
+            <select asp-for="DepartmentId" class="form-select glass-input">
+                <option value="">-- Select Department --</option>
+                @foreach (var dep in Department.result)
+                {
+                    <option value="@dep.Id">@dep.Name</option>
+                }
+            </select>
+            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                Update Employee
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

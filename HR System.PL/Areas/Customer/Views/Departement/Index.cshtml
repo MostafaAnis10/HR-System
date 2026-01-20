@@ -1,0 +1,62 @@
+﻿@using HR_System.BLL.ModelVM.Department
+@using HR_System.BLL.ResponseResult
+@model Response<List<GetDepartmentVM>>
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<div class="container-fluid pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white">Departments</h2>
+        <a asp-action="Create" class="btn" style="background-color: #6f42c1; color: white; border-radius: 10px;">
+            + Create New
+        </a>
+    </div>
+
+    <div class="card bg-dark text-white border-0 shadow-lg" style="background-color: #1a1d21 !important; border-radius: 15px;">
+        <div class="card-body p-0">
+            <table class="table table-dark table-hover mb-0" style="background-color: #1a1d21;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #2d3238;">
+                        <th class="ps-4 py-3 text-secondary">Id</th>
+                        <th class="py-3 text-secondary">Department Name</th>
+                        <th class="py-3 text-secondary text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.result)
+                    {
+                        <tr style="border-bottom: 1px solid #2d3238; vertical-align: middle;">
+                            <td class="ps-4 py-3">@item.Id</td>
+                            <td class="py-3">@item.Name</td>
+                            <td class="py-3 text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm px-3" style="background-color: #6f42c1; color: white; border-radius: 8px;">Edit</a>
+
+
+
+                                <button onclick="deleteDepartment(@item.Id)" class="btn btn-sm px-3" style="background-color: #dc3545; color: white; border-radius: 8px;">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteDepartment(id) {
+            if (confirm("Are you sure?")) {
+                $.post("/Department/Delete/" + id, function (data) {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            }
+        }
+    </script>
+}

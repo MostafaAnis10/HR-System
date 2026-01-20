@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="HR System.BLL/HR System.BLL.csproj" />
+  <Project Path="HR System.DAL/HR System.DAL.csproj" />
+  <Project Path="HR System.PL/HR System.PL.csproj" />
+</Solution>

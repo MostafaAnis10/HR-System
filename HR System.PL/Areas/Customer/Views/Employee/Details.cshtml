@@ -1,0 +1,88 @@
+﻿@model HR_System.BLL.ModelVM.Employee.EmployeeDetailsVM
+
+<style>
+    /* =========================
+           FORM GLASS STYLE
+        ========================= */
+    .form-wrapper {
+        max-width: 520px;
+        margin: 40px auto;
+        padding: 25px 30px;
+    }
+
+    .glass-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        color: #E5E7EB;
+    }
+
+    .form-title {
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #F9FAFB;
+    }
+
+    .form-label {
+        color: #9CA3AF;
+        font-weight: 500;
+    }
+
+    .glass-input {
+        background: rgba(2, 6, 23, 0.9) !important;
+        color: #E5E7EB !important;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 10px 14px;
+    }
+
+    .btn-secondary {
+        background: #374151;
+        border-radius: 12px;
+        padding: 10px 22px;
+        color: #E5E7EB;
+        margin-top: 15px;
+        display: inline-block;
+    }
+</style>
+
+<div class="glass-card form-wrapper">
+
+    <h4 class="form-title">Employee Details</h4>
+
+    <!-- Name -->
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input class="form-control glass-input"
+               value="@Model.Name" readonly />
+    </div>
+
+    <!-- Salary -->
+    <div class="mb-3">
+        <label class="form-label">Salary</label>
+        <input class="form-control glass-input"
+               value="@Model.Salary" readonly />
+    </div>
+
+    <!-- Department -->
+    <div class="mb-3">
+        <label class="form-label">Department</label>
+        <input class="form-control glass-input"
+               value="@Model.DepartmentName" readonly />
+    </div>
+
+    <!-- Created On -->
+    <div class="mb-3">
+        <label class="form-label">Created On</label>
+        <input class="form-control glass-input"
+               value="@Model.CreateOn.ToString("yyyy-MM-dd")"
+               readonly />
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+</div>
+
