@@ -50,6 +50,7 @@ namespace HR_System.DAL.Entity
             {
                 IsDeleted = !IsDeleted;
                 DeleteBy = DeletedUser;
+                DeleteOn = DateTime.Now;
 
                 return true;
             }

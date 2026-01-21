@@ -1,4 +1,7 @@
 ﻿
+using HR_System.DAL.Repo.Abstraction;
+using HR_System.DAL.Repo.Implementation;
+
 namespace HR_System.BLL.Service.Implementation
 {
     public class DepartmentService :IDepartmentService
@@ -34,18 +37,18 @@ namespace HR_System.BLL.Service.Implementation
         {
             try
             {
-                var department = departmentRepo.GetById(id);
-                if (department == null)
-                    return new Response<bool>(false, "Department Not Found", true);
+                var result = departmentRepo.ToggaleStatus(id);
+                if (result)
+                    return new Response<bool>(true, null, false);
 
-                var result = departmentRepo.ToggaleStatus(id); // أو الـ logic اللي عندك في الـ Repo
-                return new Response<bool>(result, null, !result);
+                return new Response<bool>(false, "Failed to delete employee", true);
             }
             catch (Exception ex)
             {
                 return new Response<bool>(false, ex.Message, true);
             }
         }
+
 
         public Response<EditDepartementVM> EditDepartment(EditDepartementVM model)
         {
@@ -96,7 +99,7 @@ namespace HR_System.BLL.Service.Implementation
         {
             try
             {
-                var result = departmentRepo.GetAll();
+                var result = departmentRepo.GetAll(e => e.IsDeleted == false);
                 var mapp = mapper.Map<List<GetDepartmentVM>>(result);
                 return new Response<List<GetDepartmentVM>>(mapp, null, false);
             }

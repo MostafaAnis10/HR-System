@@ -2,61 +2,180 @@
 @using HR_System.BLL.ResponseResult
 @model Response<List<GetDepartmentVM>>
 
-@{
-    ViewData["Title"] = "Departments";
-}
+@* حقن خدمة الـ Antiforgery لاستخراج التوكن *@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
-<div class="container-fluid pt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-white">Departments</h2>
-        <a asp-action="Create" class="btn" style="background-color: #6f42c1; color: white; border-radius: 10px;">
-            + Create New
-        </a>
+<style>
+    /* ... (نفس التنسيقات الخاصة بك دون تغيير) ... */
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 25px 0;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: 12px;
+    }
+
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .glass-table thead {
+            background-color: rgba(2, 6, 23, 0.9);
+        }
+
+            .glass-table thead th {
+                color: #9CA3AF;
+                font-weight: 600;
+                padding: 12px 15px;
+            }
+
+        .glass-table tbody td {
+            color: #E5E7EB;
+            padding: 10px 15px;
+            vertical-align: middle;
+        }
+
+        .glass-table tbody tr:hover {
+            background-color: rgba(124, 58, 237, 0.08);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #DC2626, #EF4444);
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .btn-action {
+        min-width: 75px;
+        padding: 6px 12px;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .text-danger {
+        color: #EF4444;
+        font-weight: 500;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="page-title">Departments</h2>
+        <a asp-action="Create" class="btn btn-primary btn-action">+ Create New</a>
     </div>
 
-    <div class="card bg-dark text-white border-0 shadow-lg" style="background-color: #1a1d21 !important; border-radius: 15px;">
-        <div class="card-body p-0">
-            <table class="table table-dark table-hover mb-0" style="background-color: #1a1d21;">
+    @if (Model.IsHaveErrorOrNo)
+    {
+        <p class="text-danger">@Model.errorMassage</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table glass-table">
                 <thead>
-                    <tr style="border-bottom: 2px solid #2d3238;">
-                        <th class="ps-4 py-3 text-secondary">Id</th>
-                        <th class="py-3 text-secondary">Department Name</th>
-                        <th class="py-3 text-secondary text-center">Actions</th>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th style="width:200px">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.result)
                     {
-                        <tr style="border-bottom: 1px solid #2d3238; vertical-align: middle;">
-                            <td class="ps-4 py-3">@item.Id</td>
-                            <td class="py-3">@item.Name</td>
-                            <td class="py-3 text-center">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm px-3" style="background-color: #6f42c1; color: white; border-radius: 8px;">Edit</a>
-
-
-
-                                <button onclick="deleteDepartment(@item.Id)" class="btn btn-sm px-3" style="background-color: #dc3545; color: white; border-radius: 8px;">Delete</button>
+                        <tr id="row-@item.Id">
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-action">Edit</a>
+                                    <button class="btn btn-danger btn-action btn-delete"
+                                            data-id="@item.Id"
+                                            data-name="@item.Name">
+                                        Delete
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-    </div>
+    }
 </div>
 
-@section Scripts {
-    <script>
-        function deleteDepartment(id) {
-            if (confirm("Are you sure?")) {
-                $.post("/Department/Delete/" + id, function (data) {
+<script>
+    // 1. يجب تعريف المتغير واستخراج التوكن من السيرفر أولاً
+    const antiForgeryToken = '@Antiforgery.GetAndStoreTokens(Context).RequestToken';
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+
+            if (confirm(`Are you sure you want to delete department "${name}"?`)) {
+                // إرسال الـ id كـ Query String
+                fetch(`/Customer/Departement/Delete?id=${id}`, {
+                    method: 'POST',
+                    headers: {
+                        // الآن المتغير مُعرّف وسيتم إرساله بنجاح
+                        'RequestVerificationToken': antiForgeryToken
+                    }
+                })
+                .then(res => {
+                    // التحقق من أن الاستجابة ناجحة قبل تحويلها لـ JSON
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    return res.json();
+                })
+                .then(data => {
                     if (data.success) {
-                        location.reload();
+                        alert(data.message);
+                        const row = document.getElementById(`row-${id}`);
+                        if (row) row.remove();
                     } else {
                         alert(data.message);
                     }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert("حدث خطأ أثناء الاتصال بالسيرفر، تأكد من تسجيل الدخول وصلاحية المسار");
                 });
             }
-        }
-    </script>
-}
+        });
+    });
+</script>

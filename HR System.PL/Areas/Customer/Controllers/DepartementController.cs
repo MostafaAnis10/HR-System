@@ -1,7 +1,9 @@
 ﻿using HR_System.BLL.ModelVM.Department;
 using HR_System.BLL.Service.Abstraction;
+using HR_System.BLL.Service.Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace HR_System.PL.Areas.Customer.Controllers
 {
@@ -74,6 +76,16 @@ namespace HR_System.PL.Areas.Customer.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id) // حذفنا [FromBody]
+        {
+            var result = departmentService.Delete(id);
+            if (result.IsHaveErrorOrNo)
+                return Json(new { success = false, message = result.errorMassage });
+
+            return Json(new { success = true, message = "Department deleted successfully" });
         }
     }
 }
