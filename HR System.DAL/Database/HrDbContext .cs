@@ -6,6 +6,7 @@ namespace HR_System.DAL.Database
     {
         public DbSet<Employee> employees { get; set; }
         public DbSet<Department> Department { get; set; }
+        public DbSet<Position> positions { get; set; }
 
 
         public HrDbContext(DbContextOptions<HrDbContext> options):base(options) 

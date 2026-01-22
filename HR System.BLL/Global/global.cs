@@ -6,4 +6,5 @@ global using HR_System.BLL.ResponseResult;
 global using AutoMapper;
 global using HR_System.BLL.ModelVM.Department;
 global using HR_System.DAL.Entity;
+global using HR_System.BLL.ModelVM.Position;
 

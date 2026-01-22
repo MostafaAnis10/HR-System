@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HR_System.BLL.ModelVM.Department;
+using HR_System.BLL.ModelVM.Position;
 using HR_System.DAL.Entity;
 
 namespace HR_System.BLL.Mapper
@@ -18,6 +19,10 @@ namespace HR_System.BLL.Mapper
         dest => dest.DepartmentName,
         opt => opt.MapFrom(src => src.Department.Name)
     );
+
+            CreateMap<Position, CreatePositionVM>().ReverseMap();
+            CreateMap<Position, EditPositionVM>().ReverseMap();
+            CreateMap<Position, GetPositionVM>().ReverseMap();
         }
     }
 }

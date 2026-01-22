@@ -1,7 +1,4 @@
 ﻿
-using HR_System.DAL.Repo.Abstraction;
-using HR_System.DAL.Repo.Implementation;
-
 namespace HR_System.BLL.Service.Implementation
 {
     public class DepartmentService :IDepartmentService
@@ -84,7 +81,7 @@ namespace HR_System.BLL.Service.Implementation
                 if(result!=null)
                 return new Response<EditDepartementVM>(mapp, null, false);
 
-                return new Response<EditDepartementVM>(mapp, "Failed To Update Employee", true);
+                return new Response<EditDepartementVM>(mapp, "Failed To Update Departement", true);
 
 
             }

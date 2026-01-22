@@ -31,6 +31,9 @@ namespace HR_System.DAL.Entity
         public int? DepartmentId { get; private set; }
         public Department? Department { get; private set; }
 
+        [ForeignKey(nameof(Position))]
+        public int? PositionId { get; private set; }
+        public Position? Position { get; private set; }
 
         public bool Update(string name , decimal salary,int? departmentId , string UserModified)
         {

@@ -14,6 +14,7 @@ namespace HR_System.BLL.Common
         {
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IPositionService, PositionService>();
             services.AddAutoMapper(x => x.AddProfile(new DomainProfile()));
 
 
