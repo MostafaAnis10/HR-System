@@ -1,0 +1,45 @@
+﻿@model HR_System.BLL.ModelVM.Position.EditPositionVM
+
+<style>
+    /* نفس تنسيقات الـ Glass اللي عندك */
+</style>
+
+<div class="glass-card form-wrapper">
+    <h4 class="form-title">Edit Position</h4>
+
+    <form asp-action="Edit" method="post">
+
+        <!-- Hidden Id -->
+        <input type="hidden" asp-for="Id" />
+
+        @if (ViewBag.Error != null)
+        {
+            <p class="text-danger">@ViewBag.Error</p>
+        }
+
+        <!-- Title -->
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-control glass-input" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <!-- Default Salary -->
+        <div class="mb-3">
+            <label asp-for="DefaultSalary" class="form-label">Default Salary</label>
+            <input asp-for="DefaultSalary" class="form-control glass-input" />
+            <span asp-validation-for="DefaultSalary" class="text-danger"></span>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                Update Position
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,26 @@
+﻿@model HR_System.BLL.ModelVM.Position.CreatePositionVM
+
+<form asp-action="Create"
+      method="post"
+      class="glass-card form-wrapper">
+
+    <h4 class="form-title">Create New Position</h4>
+
+    <!-- Title -->
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control glass-input" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <!-- Default Salary -->
+    <div class="mb-3">
+        <label asp-for="DefaultSalary" class="form-label"></label>
+        <input asp-for="DefaultSalary" class="form-control glass-input" />
+        <span asp-validation-for="DefaultSalary" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">
+        Create Position
+    </button>
+</form>
