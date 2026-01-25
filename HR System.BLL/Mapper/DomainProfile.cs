@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HR_System.BLL.ModelVM.Attendance;
 using HR_System.BLL.ModelVM.Department;
 using HR_System.BLL.ModelVM.Position;
 using HR_System.DAL.Entity;
@@ -23,6 +24,14 @@ namespace HR_System.BLL.Mapper
             CreateMap<Position, CreatePositionVM>().ReverseMap();
             CreateMap<Position, EditPositionVM>().ReverseMap();
             CreateMap<Position, GetPositionVM>().ReverseMap();
+
+
+            CreateMap<AttendanceRecord, GetAttendanceVM>()
+            .ForMember(dest => dest.EmployeeName, 
+            opt => opt.MapFrom(src => src.Employee.Name)); // مهم جداً لعرض الاسم
+
+            CreateMap<EditAttendanceVM, AttendanceRecord>().ReverseMap();
+            CreateMap<CreateAttendanceVM, AttendanceRecord>().ReverseMap();
         }
     }
 }
