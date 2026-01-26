@@ -11,13 +11,9 @@ namespace HR_System.BLL.ModelVM.Attendance
 
         // لإظهار الاسم في صفحة التعديل كـ Label فقط
         public string? EmployeeName { get; set; }
-
-        [Required]
-        public DateTime CheckIn { get; set; }
-
+               
         public DateTime? CheckOut { get; set; }
 
-        [Required]
-        public DateTime AttendanceDate { get; set; }
+        
     }
 }

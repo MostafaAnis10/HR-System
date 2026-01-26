@@ -1,10 +1,5 @@
 ﻿@using HR_System.BLL.ModelVM.Attendance
 @model CreateAttendanceVM
-@inject IEmployeeService emp
-
-@{
-    var Employees = emp.GetActiveEmployee();
-}
 <style>
     body {
         background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
@@ -83,57 +78,27 @@
 </style>
 
 <div class="glass-card">
-
-    <h2 class="page-title">Create Attendance</h2>
+    <h2 class="page-title">Check In</h2>
 
     <form asp-action="Create" method="post">
 
-        <!-- Employee -->
         <div class="mb-3">
             <label asp-for="EmployeeId" class="form-label">Employee</label>
-            <select asp-for="EmployeeId" class="form-select glass-input">
+            <select asp-for="EmployeeId" class="form-select">
                 <option value="">-- Select Employee --</option>
-
-                @foreach (var e in Employees.result)
+                @foreach (var e in ViewBag.Employees)
                 {
-                    <option value="@e.Id">
-                        @e.Name
-                    </option>
+                    <option value="@e.Id">@e.Name</option>
                 }
             </select>
-
             <span asp-validation-for="EmployeeId" class="text-danger"></span>
         </div>
 
-        <!-- Attendance Date -->
-        <div class="mb-3">
-            <label asp-for="AttendanceDate" class="form-label">Attendance Date</label>
-            <input asp-for="AttendanceDate" type="date" class="form-control" />
-            <span asp-validation-for="AttendanceDate" class="text-danger"></span>
-        </div>
-
-        <!-- Check In -->
-        <div class="mb-3">
-            <label asp-for="CheckIn" class="form-label">Check In Time</label>
-            <input asp-for="CheckIn" type="time" class="form-control" />
-            <span asp-validation-for="CheckIn" class="text-danger"></span>
-        </div>
-        <!-- Check Out -->
-        <div class="mb-3">
-            <label asp-for="CheckOut" class="form-label">Check Out Time</label>
-            <input asp-for="CheckOut" type="time" class="form-control" />
-            <span asp-validation-for="CheckOut" class="text-danger"></span>
-        </div>
-        <!-- Buttons -->
         <div class="btn-group">
             <button type="submit" class="btn btn-primary">
-                ✔ Save Attendance
+                ✔ Check In
             </button>
-
-            <a asp-action="Index"
-               class="btn btn-secondary">
-                Cancel
-            </a>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
         </div>
 
     </form>

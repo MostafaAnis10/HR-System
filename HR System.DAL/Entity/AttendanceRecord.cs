@@ -5,7 +5,7 @@ namespace HR_System.DAL.Entity
     public class AttendanceRecord
     {
         protected AttendanceRecord() { }
-        public AttendanceRecord(DateTime checkIn, DateTime? checkOut, DateTime attendanceDate, int? employeeId )
+        public AttendanceRecord(DateTime checkIn, DateTime? checkOut, DateTime attendanceDate, int employeeId )
         {
             CheckIn = checkIn;
             CheckOut = checkOut;
@@ -14,7 +14,7 @@ namespace HR_System.DAL.Entity
         }
         public int Id { get; set; }
         [ForeignKey(nameof(EmployeeId))]
-        public int? EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
         public Employee Employee { get; set; } = null!;
         public DateTime CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }

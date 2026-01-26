@@ -27,25 +27,73 @@ namespace HR_System.PL.Areas.Customer.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.Employees = employeeService.GetActiveEmployee().result;
 
-            
             return View();
         }
 
         [HttpPost]
         public IActionResult Create(CreateAttendanceVM model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = attendanceService.Create(model);
-                if (!result.IsHaveErrorOrNo)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-
-                ModelState.AddModelError("", result.errorMassage);
+                ViewBag.Employees = employeeService.GetActiveEmployee().result;
+                return View(model);
             }
-            return View(model);
+
+            var result = attendanceService.Create(model);
+
+            if (result.IsHaveErrorOrNo)
+            {
+                ModelState.AddModelError("", result.errorMassage);
+                ViewBag.Employees = employeeService.GetActiveEmployee().result;
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public IActionResult CheckOut(int id)
+        {
+            var result = attendanceService.CheckOut(id);
+
+            if (result.IsHaveErrorOrNo)
+                TempData["Error"] = result.errorMassage;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        public ActionResult Details(int id)
+        {
+            var result = attendanceService.GetByID(id);
+            if (result.IsHaveErrorOrNo)
+                return NotFound(result.errorMassage);
+
+            return View(result.result);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var result = attendanceService.Delete(id);
+
+            if (result.IsHaveErrorOrNo)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = result.errorMassage
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                message = "Attendance deleted successfully"
+            });
+        }
+
     }
 }

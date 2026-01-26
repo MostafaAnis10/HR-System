@@ -76,8 +76,15 @@
         color: #fff;
     }
 
+    .btn-warning {
+        background: linear-gradient(135deg, #F59E0B, #FBBF24);
+        border-radius: 12px;
+        color: #111827;
+        font-weight: 600;
+    }
+
     .btn-action {
-        min-width: 80px;
+        min-width: 85px;
         padding: 6px 12px;
         font-size: 13px;
     }
@@ -85,6 +92,7 @@
     .action-buttons {
         display: flex;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .text-danger {
@@ -100,7 +108,6 @@
     <div class="page-header">
         <h2 class="page-title">Attendance</h2>
 
-        <!-- ✅ CREATE BUTTON (مضاف فعليًا) -->
         <a asp-area="Customer"
            asp-controller="Attendance"
            asp-action="Create"
@@ -125,7 +132,7 @@
                         <th>Check In</th>
                         <th>Check Out</th>
                         <th>Total Hours</th>
-                        <th style="width:200px">Actions</th>
+                        <th style="width:220px">Actions</th>
                     </tr>
                 </thead>
 
@@ -142,20 +149,41 @@
                                                         ? item.CheckOut.Value.ToString("hh:mm tt")
                                                         : "—")
                             </td>
-                            <td>@item.TotalHours</td>
+                            <td>
+                                @(item.CheckOut.HasValue
+                                                        ? item.TotalHours
+                                                        : "—")
+                            </td>
 
                             <td>
                                 <div class="action-buttons">
+
                                     <a asp-action="Details"
                                        asp-route-id="@item.Id"
                                        class="btn btn-info btn-action">
                                         Details
                                     </a>
 
+                                    @if (!item.CheckOut.HasValue)
+                                    {
+                                        <form asp-action="CheckOut"
+                                              asp-controller="Attendance"
+                                              asp-area="Customer"
+                                              method="post"
+                                              style="display:inline">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit"
+                                                    class="btn btn-warning btn-action">
+                                                Check Out
+                                            </button>
+                                        </form>
+                                    }
+
                                     <button class="btn btn-danger btn-action btn-delete"
                                             data-id="@item.Id">
                                         Delete
                                     </button>
+
                                 </div>
                             </td>
                         </tr>

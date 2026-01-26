@@ -1,0 +1,114 @@
+﻿@using HR_System.BLL.ModelVM.Attendance
+@model HR_System.BLL.ModelVM.Attendance.DetailsAttendanceVM
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
+
+    .glass-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 700px;
+        margin: 50px auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+        .glass-card h4 {
+            color: #F9FAFB;
+            margin-bottom: 20px;
+        }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 15px;
+    }
+
+        .detail-row .label {
+            color: #9CA3AF;
+            font-weight: 600;
+        }
+
+    .badge-success {
+        background: linear-gradient(135deg, #22C55E, #16A34A);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, #FBBF24, #F59E0B);
+        color: #111827;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-back {
+        margin-top: 25px;
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        padding: 8px 20px;
+        text-decoration: none;
+        display: inline-block;
+    }
+</style>
+
+<div class="glass-card">
+    <h4>Attendance Details</h4>
+
+    <!-- Employee Info -->
+    <div class="detail-row">
+        <div class="label">Employee ID:</div>
+        <div>@Model.EmployeeId</div>
+    </div>
+    <div class="detail-row">
+        <div class="label">Employee Name:</div>
+        <div>@Model.EmployeeName</div>
+    </div>
+
+    <!-- Attendance Info -->
+    <div class="detail-row">
+        <div class="label">Attendance Date:</div>
+        <div>@Model.AttendanceDate.ToString("dd MMM yyyy")</div>
+    </div>
+    <div class="detail-row">
+        <div class="label">Check In:</div>
+        <div>@Model.CheckIn.ToString("hh:mm tt")</div>
+    </div>
+    <div class="detail-row">
+        <div class="label">Check Out:</div>
+        <div>@(Model.CheckOut.HasValue? Model.CheckOut.Value.ToString("hh:mm tt") : "—")</div>
+    </div>
+    <div class="detail-row">
+        <div class="label">Total Hours:</div>
+        <div>@(Model.CheckOut.HasValue? Model.TotalHours: "—")</div>
+    </div>
+    <div class="detail-row">
+        <div class="label">Checked Out:</div>
+        <div>
+            @if (Model.IsCheckedOut)
+            {
+                <span class="badge-success">Yes</span>
+            }
+            else
+            {
+                <span class="badge-warning">No</span>
+            }
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn-back">← Back to List</a>
+</div>
+

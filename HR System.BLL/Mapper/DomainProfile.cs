@@ -32,6 +32,10 @@ namespace HR_System.BLL.Mapper
 
             CreateMap<EditAttendanceVM, AttendanceRecord>().ReverseMap();
             CreateMap<CreateAttendanceVM, AttendanceRecord>().ReverseMap();
+            CreateMap<AttendanceRecord, DetailsAttendanceVM>()
+                .ForMember(d => d.EmployeeName,
+        opt => opt.MapFrom(s => s.Employee.Name));
+
         }
     }
 }

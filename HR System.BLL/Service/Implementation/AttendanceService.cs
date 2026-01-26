@@ -32,20 +32,20 @@ namespace HR_System.BLL.Service.Implementation
         }
 
         
-        public Response<EditAttendanceVM> GetByID(int id)
+        public Response<DetailsAttendanceVM> GetByID(int id)
         {
             try
             {
                 var result = attendanceRepo.GetById(id);
                 if (result == null)
-                    return new Response<EditAttendanceVM>(null, "Not Found", true);
+                    return new Response<DetailsAttendanceVM>(null, "Not Found", true);
 
-                var mapp = mapper.Map<EditAttendanceVM>(result);
-                return new Response<EditAttendanceVM>(mapp, null, false);
+                var mapp = mapper.Map<DetailsAttendanceVM>(result);
+                return new Response<DetailsAttendanceVM>(mapp, null, false);
             }
             catch (Exception ex)
             {
-                return new Response<EditAttendanceVM>(null, ex.Message, true);
+                return new Response<DetailsAttendanceVM>(null, ex.Message, true);
             }
         }
 
@@ -58,8 +58,8 @@ namespace HR_System.BLL.Service.Implementation
                 if (attendEntity == null)
                     return new Response<EditAttendanceVM>(model, "Attendance Not Found", true);
 
-            
-                mapper.Map(model, attendEntity);
+                //map
+                attendEntity.CheckOut = model.CheckOut;
 
                 var result = attendanceRepo.Edit(attendEntity);
                 if (result)
@@ -95,9 +95,13 @@ namespace HR_System.BLL.Service.Implementation
         {
             try
             {
-                
-                var attend = new AttendanceRecord(model.CheckIn, null, model.AttendanceDate, model.EmployeeId);
-               
+
+                var attend = new AttendanceRecord(
+                DateTime.Now,
+                null,
+                DateTime.Today,
+                model.EmployeeId);
+
 
                 var result = attendanceRepo.Add(attend);
                 if (result)
@@ -108,6 +112,28 @@ namespace HR_System.BLL.Service.Implementation
             catch (Exception ex)
             {
                 return new Response<CreateAttendanceVM>(model, ex.Message, true);
+            }
+        }
+
+        public Response<bool> CheckOut(int attendanceId)
+        {
+            try
+            {
+                var attendance = attendanceRepo.GetById(attendanceId);
+                if (attendance == null)
+                    return new Response<bool>(false, "Attendance not found", true);
+
+                if (attendance.CheckOut != null)
+                    return new Response<bool>(false, "Already checked out", true);
+
+                attendance.RegisterCheckOut();
+                attendanceRepo.Edit(attendance);
+
+                return new Response<bool>(true, null, false);
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool>(false, ex.Message, true);
             }
         }
     }
