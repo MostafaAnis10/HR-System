@@ -5,17 +5,66 @@
 }
 
 <style>
-    /* ... التنسيقات السابقة التي أرفقتها ... */
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
 
-    /* إضافات لتنسيق قسم الصورة */
+    /* كارت التصميم الزجاجي */
+    .glass-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 650px;
+        margin: 50px auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
+
+    .form-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+        margin-bottom: 30px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px;
+    }
+
+    .form-label {
+        color: #9CA3AF;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* تنسيق المدخلات الزجاجي */
+    .glass-input {
+        background: rgba(2, 6, 23, 0.85) !important;
+        border: 1px solid rgba(255,255,255,.08) !important;
+        color: #E5E7EB !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+    }
+
+        .glass-input:focus {
+            border-color: #7C3AED !important;
+            box-shadow: 0 0 0 .15rem rgba(124,58,237,.25) !important;
+            background: rgba(2, 6, 23, 0.95) !important;
+        }
+
+    /* تنسيق معاينة الصورة */
     .image-preview-wrapper {
         position: relative;
-        width: 100px;
-        height: 100px;
-        margin-bottom: 15px;
-        border-radius: 12px;
+        width: 120px;
+        height: 120px;
+        margin: 10px auto 20px auto;
+        border-radius: 50%; /* جعل الصورة دائرية */
         overflow: hidden;
-        border: 2px solid rgba(124, 58, 237, 0.5);
+        border: 3px solid #7C3AED;
+        box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
     }
 
     .image-preview {
@@ -30,74 +79,118 @@
         align-items: center;
         justify-content: center;
         height: 100%;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: #9CA3AF;
         text-align: center;
     }
-</style>
 
-<div class="glass-card form-wrapper">
-    <h4 class="form-title">Edit Employee</h4>
+    /* الأزرار */
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 14px;
+        padding: 12px 25px;
+        color: #fff;
+        font-weight: 600;
+        transition: 0.3s;
+    }
 
-    <form asp-action="Edit" method="post" enctype="multipart/form-data">
-
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="File" /> @if (ViewBag.Error != null)
-        {
-            <p class="text-danger">@ViewBag.Error</p>
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124,58,237,0.3);
         }
 
-        <div class="mb-3">
-            <label class="form-label d-block">Current Profile Picture</label>
-            <div class="image-preview-wrapper">
-                @if (!string.IsNullOrEmpty(Model.File))
-                {
-                    <img src="~/Files/@Model.File" class="image-preview" alt="Employee Image" />
-                }
-                else
-                {
-                    <div class="no-image-placeholder">No Image</div>
-                }
+    .btn-secondary {
+        background: rgba(255,255,255,.08);
+        border: none;
+        border-radius: 14px;
+        padding: 12px 25px;
+        color: #E5E7EB;
+        text-decoration: none;
+    }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+
+<div class="container">
+    <div class="glass-card">
+        <h4 class="form-title">
+            <i class="fas fa-user-edit me-2"></i> Edit Employee Information
+        </h4>
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="File" />
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger bg-danger text-white border-0 rounded-pill mb-4 py-2 px-4">
+                    @ViewBag.Error
+                </div>
+            }
+
+            <div class="text-center mb-4">
+                <label class="form-label">Current Profile Picture</label>
+                <div class="image-preview-wrapper">
+                    @if (!string.IsNullOrEmpty(Model.File))
+                    {
+                        <img src="~/Files/@Model.File" class="image-preview" alt="Employee Image" />
+                    }
+                    else
+                    {
+                        <div class="no-image-placeholder">
+                            <i class="fas fa-user fa-3x"></i>
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
 
-        <div class="mb-3">
-            <label asp-for="NewFile" class="form-label">Upload New Photo</label>
-            <input asp-for="NewFile" type="file" class="form-control glass-input" accept="image/*" />
-            <span asp-validation-for="NewFile" class="text-danger"></span>
-        </div>
+            <div class="mb-4">
+                <label asp-for="NewFile" class="form-label">Upload New Photo</label>
+                <input asp-for="NewFile" type="file" class="form-control glass-input" accept="image/*" />
+                <span asp-validation-for="NewFile" class="text-danger"></span>
+            </div>
 
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label">Name</label>
-            <input asp-for="Name" class="form-control glass-input" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+            <div class="mb-4">
+                <label asp-for="Name" class="form-label">Full Name</label>
+                <input asp-for="Name" class="form-control glass-input" placeholder="Enter employee name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-        <div class="mb-3">
-            <label asp-for="Salary" class="form-label">Salary</label>
-            <input asp-for="Salary" class="form-control glass-input" />
-            <span asp-validation-for="Salary" class="text-danger"></span>
-        </div>
+            <div class="mb-4">
+                <label asp-for="Salary" class="form-label">Salary</label>
+                <input asp-for="Salary" class="form-control glass-input" placeholder="0.00" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
 
-        <div class="mb-3">
-            <label asp-for="DepartmentId" class="form-label">Department</label>
-            <select asp-for="DepartmentId" class="form-select glass-input">
-                <option value="">-- Select Department --</option>
-                @foreach (var dep in Department.result)
-                {
-                    <option value="@dep.Id">@dep.Name</option>
-                }
-            </select>
-            <span asp-validation-for="DepartmentId" class="text-danger"></span>
-        </div>
+            <div class="mb-4">
+                <label asp-for="DepartmentId" class="form-label">Department</label>
+                <select asp-for="DepartmentId" class="form-select glass-input">
+                    <option value="">-- Select Department --</option>
+                    @foreach (var dep in Department.result)
+                    {
+                        <option value="@dep.Id">@dep.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="DepartmentId" class="text-danger"></span>
+            </div>
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">
-                Update Employee
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                Cancel
-            </a>
-        </div>
-    </form>
+            <div class="d-flex gap-3 mt-5">
+                <button type="submit" class="btn btn-primary flex-fill">
+                    <i class="fas fa-save me-1"></i> Update Employee
+                </button>
+                <a asp-action="Index" class="btn btn-secondary flex-fill text-center">
+                    <i class="fas fa-times me-1"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

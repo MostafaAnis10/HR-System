@@ -4,25 +4,25 @@ using System.Linq.Expressions;
 
 namespace HR_System.DAL.Repo.Implementation
 {
-    public class AttendanceRepo : IAttendanceRepo
+    public class LeaveRequestRepo : ILeaveRequestRepo
     {
         private readonly HrDbContext hrDb;
 
-        public AttendanceRepo(HrDbContext hrDb)
+        public LeaveRequestRepo(HrDbContext hrDb) 
         {
             this.hrDb = hrDb;
         }
-        public bool Add(AttendanceRecord attendance)
+        public bool Add(LeaveRequest leaveRequest)
         {
             try
             {
-                var result = hrDb.attendanceRecords.Add(attendance);
+                var result = hrDb.leaveRequests.Add(leaveRequest);
                 hrDb.SaveChanges();
-                if(result.Entity.Id>0)
+                if (result.Entity.Id > 0)
                     return true;
                 return false;
             }
-            catch(Exception )
+            catch(Exception)
             {
                 throw;
             }
@@ -32,38 +32,35 @@ namespace HR_System.DAL.Repo.Implementation
         {
             try
             {
-                var Attendance = GetById(id);
-                if( Attendance == null ) return false;
-                
-                hrDb.attendanceRecords.Remove( Attendance );
+                var result = hrDb.leaveRequests.FirstOrDefault(e=>e.Id == id);
+                if(result == null) return false;
+                hrDb.Remove(result);
                 hrDb.SaveChanges();
                 return true;
+
             }
-            catch (Exception)
+            catch(Exception)
             {
                 throw;
             }
         }
 
-        public bool Edit(AttendanceRecord attendance)
+        public bool Edit(LeaveRequest leaveRequest)
         {
             try
             {
-                var oldAttendance = hrDb.attendanceRecords.FirstOrDefault(a=>a.Id ==attendance.Id);
-
-                if (oldAttendance != null)
+              var result = hrDb.leaveRequests.FirstOrDefault(e=>e.Id==leaveRequest.Id);
+                if(result == null) return false;
+                if(result !=null)
                 {
-                    oldAttendance.AttendanceDate = attendance.AttendanceDate;
-                    oldAttendance.CheckOut = attendance.CheckOut;
-                    oldAttendance.CheckIn = attendance.CheckIn;
-
+                    result.FromDate = leaveRequest.FromDate;
+                    result.ToDate = leaveRequest.ToDate;
+                    result.Status = leaveRequest.Status;
+                    result.LeaveType = leaveRequest.LeaveType;
                     hrDb.SaveChanges();
-                  return true;
-
+                    return true;
                 }
-
                 return false;
-                
             }
             catch (Exception)
             {
@@ -71,18 +68,18 @@ namespace HR_System.DAL.Repo.Implementation
             }
         }
 
-        public List<AttendanceRecord> GetAll(Expression<Func<AttendanceRecord, bool>>? Filter = null)
+        public List<LeaveRequest> GetAll(Expression<Func<LeaveRequest, bool>>? Filter = null)
         {
             try
             {
                 if (Filter != null)
                 {
-                    var result = hrDb.attendanceRecords.Include(e=>e.Employee).Where(Filter).ToList();
+                    var result = hrDb.leaveRequests.Include(x => x.Employee).Where(Filter).ToList();
                     return result;
                 }
                 else
                 {
-                    var result = hrDb.attendanceRecords.Include(e => e.Employee).ToList();
+                    var result = hrDb.leaveRequests.Include(x => x.Employee).ToList();
                     return result;
                 }
 
@@ -93,11 +90,11 @@ namespace HR_System.DAL.Repo.Implementation
             }
         }
 
-        public AttendanceRecord GetById(int id)
+        public LeaveRequest GetById(int id)
         {
             try
             {
-                var result = hrDb.attendanceRecords.Include(e => e.Employee).FirstOrDefault(a=>a.Id==id);
+                var result = hrDb.leaveRequests.Include(e=>e.Employee).FirstOrDefault(a => a.Id == id);
                 return result;
 
             }

@@ -150,5 +150,6 @@ namespace HR_System.PL.Areas.Customer.Controllers
             return Json(new { success = true, message = "Employee deleted successfully" });
         }
 
+
     }
 }

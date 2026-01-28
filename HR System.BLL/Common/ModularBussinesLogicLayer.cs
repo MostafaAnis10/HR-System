@@ -16,11 +16,8 @@ namespace HR_System.BLL.Common
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<ILeaveRequestService, LeaveRequestService>();
             services.AddAutoMapper(x => x.AddProfile(new DomainProfile()));
-
-
-        
-
             return services;
         }
     }

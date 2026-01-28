@@ -138,44 +138,96 @@
         </div>
     }
 </div>
-
-<script>
-    // 1. يجب تعريف المتغير واستخراج التوكن من السيرفر أولاً
-    const antiForgeryToken = '@Antiforgery.GetAndStoreTokens(Context).RequestToken';
-
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const id = this.dataset.id;
-            const name = this.dataset.name;
-
-            if (confirm(`Are you sure you want to delete department "${name}"?`)) {
-                // إرسال الـ id كـ Query String
-                fetch(`/Customer/Departement/Delete?id=${id}`, {
-                    method: 'POST',
-                    headers: {
-                        // الآن المتغير مُعرّف وسيتم إرساله بنجاح
-                        'RequestVerificationToken': antiForgeryToken
-                    }
-                })
-                .then(res => {
-                    // التحقق من أن الاستجابة ناجحة قبل تحويلها لـ JSON
-                    if (!res.ok) throw new Error('Network response was not ok');
-                    return res.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        const row = document.getElementById(`row-${id}`);
-                        if (row) row.remove();
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                    alert("حدث خطأ أثناء الاتصال بالسيرفر، تأكد من تسجيل الدخول وصلاحية المسار");
-                });
-            }
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '@TempData["SuccessMessage"]',
+                background: '#111827',
+                color: '#fff',
+                confirmButtonColor: '#7C3AED',
+                timer: 2500,
+                showConfirmButton: false
+            });
         });
-    });
-</script>
+    </script>
+}
+
+@section Scripts {
+    <script>
+        // 1. استخراج التوكن للأمان
+        const antiForgeryToken = '@Antiforgery.GetAndStoreTokens(Context).RequestToken';
+
+        // 2. استخدام Event Delegation للتعامل مع زر الحذف
+        $(document).on('click', '.btn-delete', function () {
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to delete department "${name}". This action cannot be undone!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DC2626',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                background: '#111827',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // إرسال طلب الحذف
+                    fetch(`/Customer/Departement/Delete?id=${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': antiForgeryToken
+                        }
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Network response was not ok');
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: data.message || 'Department has been deleted.',
+                                icon: 'success',
+                                background: '#111827',
+                                color: '#fff',
+                                confirmButtonColor: '#7C3AED',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // حذف الصف من الجدول برمجياً بدون عمل Refresh كامل
+                                $(`#row-${id}`).fadeOut(500, function() { $(this).remove(); });
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message || 'Something went wrong.',
+                                icon: 'error',
+                                background: '#111827',
+                                color: '#fff'
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Communication Error',
+                            text: 'Could not connect to server.',
+                            background: '#111827',
+                            color: '#fff'
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+}

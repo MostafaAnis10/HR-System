@@ -8,6 +8,7 @@ namespace HR_System.DAL.Database
         public DbSet<Department> Department { get; set; }
         public DbSet<Position> positions { get; set; }
         public DbSet<AttendanceRecord> attendanceRecords { get; set; }
+        public DbSet<LeaveRequest> leaveRequests { get; set; }
 
 
         public HrDbContext(DbContextOptions<HrDbContext> options):base(options) 

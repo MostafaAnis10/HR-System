@@ -1,0 +1,132 @@
+﻿@using HR_System.BLL.ModelVM.LeaveRequest
+@model CreateLeaveRequestVM
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
+
+    .glass-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 650px;
+        margin: 40px auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .form-label {
+        color: #9CA3AF;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
+    .form-control, .form-select {
+        background: rgba(2, 6, 23, 0.85);
+        border: 1px solid rgba(255,255,255,.08);
+        color: #E5E7EB;
+        border-radius: 12px;
+        padding: 10px 14px;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #7C3AED;
+            box-shadow: 0 0 0 .15rem rgba(124,58,237,.25);
+            background: rgba(2, 6, 23, 0.95);
+            color: #fff;
+        }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 14px;
+        padding: 10px 18px;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .btn-secondary {
+        background: rgba(255,255,255,.08);
+        border: none;
+        border-radius: 14px;
+        padding: 10px 18px;
+        color: #E5E7EB;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+        justify-content: center;
+    }
+</style>
+
+<div class="glass-card">
+    <h2 class="page-title">Create Leave Request</h2>
+
+    <form asp-action="Create" method="post">
+
+        <div class="mb-3">
+            <label asp-for="EmployeeId" class="form-label">Employee</label>
+            <select asp-for="EmployeeId" class="form-select">
+                <option value="">-- Select Employee --</option>
+                @foreach (var e in ViewBag.Employees)
+                {
+                    <option value="@e.Id">@e.Name</option>
+                }
+            </select>
+            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FromDate" class="form-label">From Date</label>
+            <input asp-for="FromDate" type="date" class="form-control" />
+            <span asp-validation-for="FromDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ToDate" class="form-label">To Date</label>
+            <input asp-for="ToDate" type="date" class="form-control" />
+            <span asp-validation-for="ToDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LeaveType" class="form-label">Leave Type</label>
+            <select asp-for="LeaveType" class="form-select">
+                <option value="">-- Select Leave Type --</option>
+                @foreach (var type in Enum.GetValues(typeof(LeaveType)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <span asp-validation-for="LeaveType" class="text-danger"></span>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

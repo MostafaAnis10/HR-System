@@ -5,44 +5,161 @@
     var Department = dept.GetDepartment();
 }
 
-<form asp-action="Create"
-      method="post"
-      enctype="multipart/form-data"
-      class="glass-card form-wrapper">
+<style>
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
 
-    <h4 class="form-title">Create New Employee</h4>
+    /* الكارت الزجاجي */
+    .glass-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 650px;
+        margin: 50px auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
 
-    <!-- Name -->
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control glass-input" />
-    </div>
+    .form-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+        margin-bottom: 30px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px;
+    }
 
-    <!-- Salary -->
-    <div class="mb-3">
-        <label asp-for="Salary" class="form-label"></label>
-        <input asp-for="Salary" class="form-control glass-input" />
-    </div>
+    .form-label {
+        color: #9CA3AF;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
 
-    <!-- Department -->
-    <div class="mb-3">
-        <label asp-for="DepartmentId" class="form-label"></label>
-        <select asp-for="DepartmentId" class="form-select glass-input">
-            <option value="">-- Select Department --</option>
-            @foreach (var dep in Department.result)
-            {
-                <option value="@dep.Id">@dep.Name</option>
-            }
-        </select>
-    </div>
+    /* تنسيق المدخلات */
+    .glass-input {
+        background: rgba(2, 6, 23, 0.85) !important;
+        border: 1px solid rgba(255,255,255,.08) !important;
+        color: #E5E7EB !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        transition: 0.3s ease-in-out;
+    }
 
-    <!-- Image Upload -->
-    <div class="mb-3">
-        <label asp-for="File" class="form-label">Employee Image</label>
-        <input asp-for="File" type="file" class="form-control glass-input" />
-    </div>
+        .glass-input:focus {
+            border-color: #7C3AED !important;
+            box-shadow: 0 0 0 .15rem rgba(124,58,237,.25) !important;
+            background: rgba(2, 6, 23, 0.95) !important;
+        }
 
-    <button type="submit" class="btn btn-primary mt-3">
-        Create Employee
-    </button>
-</form>
+    /* الزرار */
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 14px;
+        padding: 14px 25px;
+        color: #fff;
+        font-weight: 600;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124,58,237,0.3);
+        }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        border: none;
+        border-radius: 14px;
+        padding: 12px 25px;
+        color: #E5E7EB;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* أيقونة رفع الملفات */
+    input[type="file"]::file-selector-button {
+        background: #7C3AED;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 12px;
+        margin-right: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        input[type="file"]::file-selector-button:hover {
+            background: #9333EA;
+        }
+</style>
+
+<div class="container">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="glass-card">
+
+        <h4 class="form-title">
+            <i class="fas fa-user-plus me-2"></i> Create New Employee
+        </h4>
+
+        <div class="mb-4">
+            <label asp-for="Name" class="form-label">Full Name</label>
+            <input asp-for="Name" class="form-control glass-input" placeholder="e.g. Ahmed Ali" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Salary" class="form-label">Monthly Salary</label>
+            <div class="input-group">
+                <input asp-for="Salary" class="form-control glass-input" placeholder="0.00" />
+            </div>
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="DepartmentId" class="form-label">Department</label>
+            <select asp-for="DepartmentId" class="form-select glass-input">
+                <option value="">-- Select Department --</option>
+                @foreach (var dep in Department.result)
+                {
+                    <option value="@dep.Id">@dep.Name</option>
+                }
+            </select>
+            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="File" class="form-label">Employee Profile Image</label>
+            <input asp-for="File" type="file" class="form-control glass-input" accept="image/*" />
+            <span asp-validation-for="File" class="text-danger"></span>
+        </div>
+
+        <div class="mt-5">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check-circle me-1"></i> Create Employee
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

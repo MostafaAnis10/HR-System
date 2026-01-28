@@ -1,0 +1,265 @@
+﻿@using HR_System.BLL.ModelVM.LeaveRequest
+@using HR_System.BLL.ResponseResult
+@model Response<List<GetLeaveRequestVM>>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 25px 0;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: 12px;
+    }
+
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .glass-table thead {
+            background-color: rgba(2, 6, 23, 0.9);
+        }
+
+            .glass-table thead th {
+                color: #9CA3AF;
+                font-weight: 600;
+                padding: 12px 15px;
+            }
+
+        .glass-table tbody td {
+            color: #E5E7EB;
+            padding: 10px 15px;
+            vertical-align: middle;
+        }
+
+        .glass-table tbody tr:hover {
+            background-color: rgba(124, 58, 237, 0.08);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .btn-info {
+        background: linear-gradient(135deg, #2563EB, #3B82F6);
+        border-radius: 12px;
+        color: #fff;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #16A34A, #22C55E);
+        border-radius: 12px;
+        border: none;
+        color: #fff;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #F59E0B, #FBBF24);
+        border-radius: 12px;
+        border: none;
+        color: #111827;
+        font-weight: 600;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #DC2626, #EF4444);
+        border-radius: 12px;
+        border: none;
+        color: #fff;
+    }
+
+    .btn-action {
+        min-width: 85px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-pending {
+        background: #F59E0B;
+        color: #111827;
+    }
+
+    .badge-approved {
+        background: #22C55E;
+        color: #022C22;
+    }
+
+    .badge-rejected {
+        background: #EF4444;
+        color: #fff;
+    }
+
+    .text-danger {
+        color: #EF4444;
+        font-weight: 500;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="page-title">Leave Requests</h2>
+        <a asp-area="Customer" asp-controller="LeaveRequest" asp-action="Create" class="btn btn-primary btn-action">
+            + Create Request
+        </a>
+    </div>
+
+    @if (Model.IsHaveErrorOrNo)
+    {
+        <p class="text-danger">@Model.errorMassage</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table glass-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Employee</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Total Days</th>
+                        <th>Leave Type</th>
+                        <th>Status</th>
+                        <th style="width:250px">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.result)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.EmployeeName</td>
+                            <td>@item.FromDate.ToString("dd MMM yyyy")</td>
+                            <td>@item.ToDate.ToString("dd MMM yyyy")</td>
+                            <td>@item.TotalDays</td>
+                            <td>@item.LeaveType</td>
+                            <td>
+                                <span class="badge @(item.Status == LeaveStatus.Pending ? "badge-pending" :
+                                                                                          item.Status == LeaveStatus.Approved ? "badge-approved" : "badge-rejected")">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-action">Details</a>
+
+                                    @if (item.Status == LeaveStatus.Pending)
+                                    {
+                                        <button class="btn btn-success btn-action btn-change-status"
+                                                data-id="@item.Id" data-status="@LeaveStatus.Approved">
+                                            Approve
+                                        </button>
+
+                                        <button class="btn btn-warning btn-action btn-change-status"
+                                                data-id="@item.Id" data-status="@LeaveStatus.Rejected">
+                                            Reject
+                                        </button>
+
+                                        <button class="btn btn-danger btn-action btn-delete" data-id="@item.Id">Delete</button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // دالة موحدة للتعامل مع طلبات الـ Ajax
+        const handleRequest = (url, successMsg) => {
+            fetch(url, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({ title: 'Success!', text: data.message || successMsg, icon: 'success', background: '#111827', color: '#fff' })
+                        .then(() => location.reload());
+                    } else {
+                        Swal.fire({ title: 'Error!', text: data.message, icon: 'error', background: '#111827', color: '#fff' });
+                    }
+                });
+        };
+
+        // 1. منطق حذف الطلب
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this delete!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DC2626',
+                    confirmButtonText: 'Yes, delete it!',
+                    background: '#111827', color: '#fff'
+                }).then((result) => {
+                    if (result.isConfirmed) handleRequest(`/Customer/LeaveRequest/Delete?id=${id}`, "Deleted successfully");
+                });
+            });
+        });
+
+        // 2. منطق تغيير الحالة (Approve/Reject)
+        document.querySelectorAll('.btn-change-status').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+                const status = this.dataset.status;
+                const actionText = status === "Approved" ? "Approve" : "Reject";
+                const color = status === "Approved" ? "#16A34A" : "#F59E0B";
+
+                Swal.fire({
+                    title: `${actionText} Request?`,
+                    text: `Are you sure you want to set this status to ${status}?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: color,
+                    confirmButtonText: `Yes, ${actionText}!`,
+                    background: '#111827', color: '#fff'
+                }).then((result) => {
+                    if (result.isConfirmed) handleRequest(`/Customer/LeaveRequest/ChangeStatus?id=${id}&status=${status}`, "Status updated");
+                });
+            });
+        });
+    </script>
+}

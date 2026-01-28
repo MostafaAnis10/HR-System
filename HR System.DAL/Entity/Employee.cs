@@ -35,6 +35,7 @@ namespace HR_System.DAL.Entity
         public int? PositionId { get; private set; }
         public Position? Position { get; private set; }
         public List<AttendanceRecord> attendanceRecords { get; private set; }
+        public List<LeaveRequest> leaveRequests { get; private set; }
         public bool Update(string name , decimal salary,int? departmentId , string UserModified)
         {
             if(!string.IsNullOrEmpty(UserModified) )

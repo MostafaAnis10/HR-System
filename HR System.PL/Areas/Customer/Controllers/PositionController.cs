@@ -35,6 +35,7 @@ namespace HR_System.PL.Areas.Customer.Controllers
                 var result = positionService.CreatePosition(model);
                 if (!result.IsHaveErrorOrNo)
                 {
+                    TempData["SuccessMessage"] = "Position created successfully!";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -63,6 +64,7 @@ namespace HR_System.PL.Areas.Customer.Controllers
                 var result = positionService.EditPosition(model);
                 if (!result.IsHaveErrorOrNo)
                 {
+                    TempData["SuccessMessage"] = "Position updated successfully!";
                     return RedirectToAction(nameof(Index));
                 }
 

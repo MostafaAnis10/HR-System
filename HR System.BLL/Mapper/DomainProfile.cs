@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HR_System.BLL.ModelVM.Attendance;
 using HR_System.BLL.ModelVM.Department;
+using HR_System.BLL.ModelVM.LeaveRequest;
 using HR_System.BLL.ModelVM.Position;
 using HR_System.DAL.Entity;
 
@@ -36,6 +37,30 @@ namespace HR_System.BLL.Mapper
                 .ForMember(d => d.EmployeeName,
         opt => opt.MapFrom(s => s.Employee.Name));
 
+
+            // ===================== Entity → Get =====================
+            CreateMap<LeaveRequest, GetLeaveRequestVM>()
+                .ForMember(dest => dest.EmployeeName,
+               opt => opt.MapFrom(src => src.Employee.Name))
+                .ForMember(dest => dest.LeaveType,
+                           opt => opt.MapFrom(src => src.LeaveType.ToString()))
+                .ForMember(dest => dest.Status,
+                           opt => opt.MapFrom(src => src.Status.ToString()));
+
+            // ===================== Entity → Details =====================
+            CreateMap<LeaveRequest, DetailsLeaveRequestVM>()
+    .ForMember(dest => dest.EmployeeName,
+               opt => opt.MapFrom(src => src.Employee.Name));
+            // ===================== Create VM → Entity =====================
+            CreateMap<CreateLeaveRequestVM, LeaveRequest>()
+                .ForMember(dest => dest.Status,
+                           opt => opt.MapFrom(src => LeaveStatus.Pending));
+
+            // ===================== Edit VM → Entity =====================
+            CreateMap<EditLeaveRequestVM, LeaveRequest>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.Employee, opt => opt.Ignore());
         }
     }
 }

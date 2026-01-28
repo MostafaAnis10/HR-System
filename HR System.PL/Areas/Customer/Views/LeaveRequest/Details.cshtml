@@ -1,0 +1,225 @@
+﻿@using HR_System.BLL.ModelVM.LeaveRequest
+@model DetailsLeaveRequestVM
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
+
+    .details-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 750px;
+        margin: 50px auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
+
+    .page-title {
+        font-size: 26px;
+        font-weight: 600;
+        color: #F9FAFB;
+        margin-bottom: 30px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    .info-item {
+        margin-bottom: 15px;
+    }
+
+    .info-label {
+        color: #9CA3AF;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .info-value {
+        color: #F3F4F6;
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    .badge {
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .badge-pending {
+        background: #F59E0B;
+        color: #111827;
+    }
+
+    .badge-approved {
+        background: #22C55E;
+        color: #022C22;
+    }
+
+    .badge-rejected {
+        background: #EF4444;
+        color: #fff;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-secondary {
+        background: rgba(255,255,255,.08);
+        border: none;
+        border-radius: 12px;
+        padding: 10px 25px;
+        color: #E5E7EB;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,.15);
+            color: #fff;
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 12px;
+        padding: 10px 25px;
+        color: #fff;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container">
+    <div class="details-card">
+        <h2 class="page-title">
+            <i class="bi bi-file-earmark-text"></i> Leave Request Details
+        </h2>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Request ID</span>
+                <span class="info-value">#@Model.Id</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Employee Name</span>
+                <span class="info-value">@Model.EmployeeName</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Leave Type</span>
+                <span class="info-value">@Model.LeaveType</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Current Status</span>
+                <div>
+                    <span class="badge
+                        @(Model.Status == LeaveStatus.Pending ? "badge-pending" :
+                                                    Model.Status == LeaveStatus.Approved ? "badge-approved" : "badge-rejected")">
+                        @Model.Status
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">From Date</span>
+                <span class="info-value">@Model.FromDate.ToString("dd MMMM yyyy")</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">To Date</span>
+                <span class="info-value">@Model.ToDate.ToString("dd MMMM yyyy")</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Total Duration</span>
+                <span class="info-value" style="color: #A78BFA;">@Model.TotalDays Days</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+
+            @if (Model.Status == LeaveStatus.Pending)
+            {
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="bi bi-printer"></i> Print Request
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const requestId = this.dataset.id;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#7C3AED', // لون الـ Primary بتاعك
+                cancelButtonColor: '#EF4444', // لون الـ Danger
+                confirmButtonText: 'Yes, delete it!',
+                background: '#111827', // لون الـ Dark بتاع الثيم
+                color: '#E5E7EB'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // تنفيذ عملية المسح
+                    fetch(`/Customer/LeaveRequest/Delete?id=${requestId}`, {
+                        method: 'POST'
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: data.message,
+                                icon: 'success',
+                                background: '#111827',
+                                color: '#E5E7EB'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message,
+                                icon: 'error',
+                                background: '#111827',
+                                color: '#E5E7EB'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>

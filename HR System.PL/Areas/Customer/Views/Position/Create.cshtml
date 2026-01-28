@@ -1,26 +1,125 @@
 ﻿@model HR_System.BLL.ModelVM.Position.CreatePositionVM
 
-<form asp-action="Create"
-      method="post"
-      class="glass-card form-wrapper">
+<style>
+    body {
+        background: linear-gradient(135deg, #0B0F1A, #111827, #1F2937);
+        color: #E5E7EB;
+        font-family: 'Inter', 'Nunito', sans-serif;
+    }
 
-    <h4 class="form-title">Create New Position</h4>
+    .glass-card {
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 600px;
+        margin: 60px auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
 
-    <!-- Title -->
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control glass-input" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+    .form-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+        margin-bottom: 30px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px;
+    }
 
-    <!-- Default Salary -->
-    <div class="mb-3">
-        <label asp-for="DefaultSalary" class="form-label"></label>
-        <input asp-for="DefaultSalary" class="form-control glass-input" />
-        <span asp-validation-for="DefaultSalary" class="text-danger"></span>
-    </div>
+    .form-label {
+        color: #9CA3AF;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
 
-    <button type="submit" class="btn btn-primary mt-3">
-        Create Position
-    </button>
-</form>
+    .glass-input {
+        background: rgba(2, 6, 23, 0.85) !important;
+        border: 1px solid rgba(255,255,255,.08) !important;
+        color: #E5E7EB !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        transition: 0.3s;
+    }
+
+        .glass-input:focus {
+            border-color: #7C3AED !important;
+            box-shadow: 0 0 0 .15rem rgba(124,58,237,.25) !important;
+            background: rgba(2, 6, 23, 0.95) !important;
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED, #9333EA);
+        border: none;
+        border-radius: 14px;
+        padding: 12px 20px;
+        color: #fff;
+        font-weight: 600;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124,58,237,0.3);
+            opacity: 0.9;
+        }
+
+    .btn-secondary {
+        background: rgba(255,255,255,.08);
+        border: none;
+        border-radius: 14px;
+        padding: 12px 20px;
+        color: #E5E7EB;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        margin-top: 10px;
+    }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+
+<div class="container">
+    <form asp-action="Create" method="post" class="glass-card">
+
+        <h4 class="form-title">
+            <i class="bi bi-briefcase-fill me-2"></i> Create New Position
+        </h4>
+
+        <div class="mb-4">
+            <label asp-for="Title" class="form-label">Position Title</label>
+            <input asp-for="Title" class="form-control glass-input" placeholder="e.g. Senior Developer" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="DefaultSalary" class="form-label">Default Salary</label>
+            <div class="input-group">
+                <span class="input-group-text glass-input" style="border-right:none; border-top-right-radius:0; border-bottom-right-radius:0;">$</span>
+                <input asp-for="DefaultSalary" class="form-control glass-input" style="border-top-left-radius:0; border-bottom-left-radius:0;" placeholder="0.00" />
+            </div>
+            <span asp-validation-for="DefaultSalary" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Create Position
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Cancel & Back
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
